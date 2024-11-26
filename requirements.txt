@@ -1,0 +1,14 @@
+sentencepiece
+blobfile
+protobuf
+transformers
+peft
+bitsandbytes
+einops
+accelerate
+setuptools-rust
+openai-whisper
+pytubefix
+pydub
+pandas
+git+https://github.com/huggingface/transformers.git

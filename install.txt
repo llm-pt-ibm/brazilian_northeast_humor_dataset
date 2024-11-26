@@ -1,0 +1,6 @@
+sudo apt install python3-pip
+sudo apt install python3.12-venv
+sudo apt install ffmpeg
+sudo apt install git
+python3 -m venv humor_experiments_venv
+source humor_experiments_venv/bin/activate
