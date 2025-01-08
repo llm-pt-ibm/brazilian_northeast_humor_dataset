@@ -1,0 +1,11 @@
+sentencepiece
+blobfile
+protobuf
+bitsandbytes
+einops
+accelerate
+setuptools-rust
+openai-whisper
+pytubefix
+pydub
+pandas
