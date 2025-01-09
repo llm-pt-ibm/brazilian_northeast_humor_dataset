@@ -1,26 +1,35 @@
 import argparse
-from src.model_runner import ModelRunner
-from src.data_handler import DataHandler
-from src.evaluator import Evaluator
+from config import DATASET_PATH, LLM_MODELS, DEFAULT_LLM_PARAMS
+from dataset_loader import DatasetLoader
+from llm_interface import LLMInterface
+from llm_prompt_manager import PromptManager
+from evaluator import Evaluator
+from visualization import Visualization
 
 def main():
-    # Configuração de argumentos do terminal
-    parser = argparse.ArgumentParser(description="Benchmark de LLMs")
-    parser.add_argument("--config", type=str, required=True, help="Caminho do arquivo de configuração dos modelos")
-    parser.add_argument("--data", type=str, required=True, help="Caminho do dataset de entrada")
-    parser.add_argument("--output", type=str, required=True, help="Caminho do diretório para salvar os resultados")
+    parser = argparse.ArgumentParser(description="Benchmark para LLMs.")
+    parser.add_argument("--models", nargs="+", default=[model["name"] for model in LLM_MODELS])
     args = parser.parse_args()
 
-    # Carrega os dados e configurações
-    data_handler = DataHandler(args.data)
-    dataset = data_handler.load_data()
+    # Carrega o dataset
+    loader = DatasetLoader(DATASET_PATH)
+    data = loader.load_dataset()
 
-    # Inicializa os modelos
-    model_runner = ModelRunner(args.config)
+    # Inicializa avaliadores e visualização
+    evaluator = Evaluator()
 
-    # Executa os prompts
-    evaluator = Evaluator(model_runner, dataset, args.output)
-    evaluator.run_benchmark()
+    for model_config in LLM_MODELS:
+        if model_config["name"] in args.models:
+            llm = LLMInterface(model_config)
+
+            # Itera sobre o dataset
+            for _, row in data.iterrows():
+                prompt = PromptManager.generate_prompt("punchlines", row)
+                response = llm.generate(prompt, DEFAULT_LLM_PARAMS)
+                # Adicione o código para avaliar o resultado aqui
+
+    # Exemplo de visualização
+    Visualization.plot_classification_report({"funny": 0.85, "humor": 0.75}, "results.png")
 
 if __name__ == "__main__":
     main()

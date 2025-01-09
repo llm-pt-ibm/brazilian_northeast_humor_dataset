@@ -1,5 +1,13 @@
-peft
-openai
-transformers
 pandas
+numpy
+scikit-learn
+rouge-score
+sentence-transformers
+transformers
+openai
+tqdm
+matplotlib
+seaborn
+typer
+python-dotenv
 pyyaml
