@@ -1,5 +1,3 @@
-# config.py
-
 # Caminho do dataset
 DATASET_PATH = "/home/josegama/Documentos/GitHub/humor_experiments-1/llms_evaluation/data/transcripted_humor_videos.csv"
 
@@ -12,7 +10,7 @@ DEFAULT_LLM_PARAMS = {
 # Modelos a serem avaliados
 LLM_MODELS = [
     #{"name": "OpenAI GPT-4", "type": "api", "endpoint": "https://api.openai.com/v1/chat/completions", "api_key": "your_api_key"},
-    {"name": "HuggingFace Falcon", "type": "hf", "model_name": "tiiuae/falcon-7b-instruct"}
+    {"name": "GOOGLE FLAN T5 BASE", "type": "hf", "model_name": "google/flan-t5-base"}
 ]
 
 # Colunas do dataset

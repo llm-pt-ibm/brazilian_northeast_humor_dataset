@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer, AutoConfig
 import requests
 
 class LLMInterface:
@@ -6,7 +6,11 @@ class LLMInterface:
         self.name = model_config["name"]
         self.type = model_config["type"]
         if self.type == "hf":
-            self.model = AutoModelForCausalLM.from_pretrained(model_config["model_name"])
+            config = AutoConfig.from_pretrained(model_config["model_name"])
+            if config.architectures[0] in ["T5ForConditionalGeneration", "BartForConditionalGeneration"]:
+                self.model = AutoModelForSeq2SeqLM.from_pretrained(model_config["model_name"])
+            else:
+                self.model = AutoModelForCausalLM.from_pretrained(model_config["model_name"])
             self.tokenizer = AutoTokenizer.from_pretrained(model_config["model_name"])
         elif self.type == "api":
             self.endpoint = model_config["endpoint"]
