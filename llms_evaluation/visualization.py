@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -16,6 +17,7 @@ class Visualization:
         plt.xticks(rotation=45)
         plt.legend(title="Modelos")
         plt.tight_layout()
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path)
         plt.close()
 
@@ -30,6 +32,7 @@ class Visualization:
         plt.xlabel("Modelos")
         plt.ylabel("Pontuação Média de ROUGE-L")
         plt.tight_layout()
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path)
         plt.close()
 
@@ -44,5 +47,6 @@ class Visualization:
         plt.xlabel("Modelos")
         plt.ylabel("Similaridade Média (Cosseno)")
         plt.tight_layout()
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)        
         plt.savefig(output_path)
         plt.close()
