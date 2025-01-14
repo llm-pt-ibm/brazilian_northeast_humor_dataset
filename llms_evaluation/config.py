@@ -10,7 +10,7 @@ DEFAULT_LLM_PARAMS = {
 # Modelos a serem avaliados
 LLM_MODELS = [
     #{"name": "OpenAI GPT-4", "type": "api", "endpoint": "https://api.openai.com/v1/chat/completions", "api_key": "your_api_key"},
-    {"name": "GOOGLE FLAN T5 BASE", "type": "hf", "model_name": "google/flan-t5-base"}
+    {"name": "Google Flan T5 Large", "type": "hf", "model_name": "google/flan-t5-large"}
 ]
 
 # Colunas do dataset
