@@ -11,5 +11,4 @@ class WhisperAudioTranscriber:
             return result['text']
         
         except Exception as e:
-            print(str(e))
             return ''

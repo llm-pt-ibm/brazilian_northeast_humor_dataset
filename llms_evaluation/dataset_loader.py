@@ -20,6 +20,6 @@ class DatasetLoader:
         "joke_explanation"]
 
         dataframe = pd.read_csv(self.file_path)
-        filtered_df = dataframe.dropna(subset=columns_to_check)[4:5]
+        filtered_df = dataframe.dropna(subset=columns_to_check)
 
         return filtered_df
