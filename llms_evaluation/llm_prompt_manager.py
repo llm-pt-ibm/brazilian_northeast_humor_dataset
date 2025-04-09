@@ -1,39 +1,59 @@
 class PromptManager:
-    @staticmethod
-    def generate_prompt(column_name, row):
-        if column_name == "punchlines":
-            return (
-                f"Texto humorístico: {row['corrected_transcription']}\n"
-                f"Identifique os punchlines (explicação: {PromptManager.get_punchline_definition()})."
-            )
-        elif column_name in ["funny", "humor", "nonsense", "wit", "irony", "satire", "sarcasm", "cynicism"]:
-            return (
-                f"Texto humorístico: {row['corrected_transcription']}\n"
-                f"O texto contém o estilo cômico '{column_name}'? Explique com base na seguinte definição: {PromptManager.get_style_definition(column_name)}. Responda apenas com \"Sim\" ou \"Não\"."
-            )
-        elif column_name == "joke_explanation":
-            return (
-                f"Texto humorístico: {row['corrected_transcription']}\n"
-                f"Explique o que torna a piada engraçada."
-            )
+    def __init__(self):
+        pass
+
+    def get_punchlines_prompt(self, humorous_text, text_origin, specific_contexts = ''):
+        punchlines_prompt = f'''Dado o seguinte texto humorístico, transcrito a partir de um {text_origin}, identifique todas as punchlines presentes.
+        Definição de punchline: A punchline é a parte de uma piada que provoca o efeito cômico, sendo responsável pela resolução da piada. Ela ocorre quando o receptor reinterpreta a informação e faz uma conexão inesperada entre as partes do texto, gerando o riso.
+        Extraia todas as punchlines do texto, ou seja, as partes que representam a resolução cômica.
+        Cada punchline deve ser registrada como um item em uma lista.
+        Não adicione explicações ou trechos irrelevantes.
+        Forneça a resposta no seguinte formato de lista:
+        ["Primeira punchline identificada",
+            "Segunda punchline identificada",
+            "...outras punchlines, se existirem..."]
+        {f"Considere os seguintes contextos específicos relacionados ao texto humorístico: {specific_contexts}" if specific_contexts else ""}
+        Texto humorístico: {humorous_text}
+        Responda apenas no formato de lista.'''
+        
+        return punchlines_prompt
+
+    def get_comic_styles_prompts(self, humorous_text, text_origin, specific_contexts = ''):
+        styles_definitions = self.get_styles_definitions()
+        for comic_style, style_definition in styles_definitions.items():
+            comic_style_prompt = f'''Dado o seguinte texto humorístico, transcrito a partir de um {text_origin}, avalie se ele contém o estilo cômico "{comic_style}".
+            Definição de {comic_style}: {style_definition}
+            Responda com 1 (caso positivo) ou 0 (caso negativo), sem detalhes adicionais.
+            {f"Considere os seguintes contextos específicos relacionados ao texto humorístico: {specific_contexts}" if specific_contexts else ""}
+            Texto: {humorous_text}
+            Responda apenas no formato booleano sem explicações adicionais.
+            '''
+
+            yield comic_style_prompt
     
-    @staticmethod
-    def get_punchline_definition():
-        return (
-            "Punchline é o elemento chave do humor em piadas, que provoca uma mudança abrupta de significado ou perspectiva, "
-            "resultando na resolução de uma incongruência estabelecida anteriormente no texto."
-        )
-    
-    @staticmethod
-    def get_style_definition(style):
-        style_definitions = {
-            "funny": "A diversão (brincadeira), em inglês \"funny\", tem como objetivo espalhar o bom humor e o bom companheirismo. Pessoas que usam esse estilo cômico são consideradas sociais, joviais e também agradáveis. Em situações da vida cotidiana, eles usam provocações (travessuras) com amigos e pessoas acostumadas com assuntos obscenos. Eles podem se considerar brincalhões engraçados e gostar de fazer piadas maliciosas. Eles pregam peças inofensivas nos amigos e gostam de brincar e agir como palhaços.",
-            "humor": "O humor (também conhecido como humor benevolente) visa despertar simpatia e compreensão para as incongruências da vida, as imperfeições do mundo, as deficiências dos semelhantes e os próprios contratempos e erros. Pessoas com humor são observadores realistas das fraquezas humanas, mas tratam-nas com benevolência, muitas vezes incluindo-se a si mesmas no julgamento, em vez de direcioná-lo exclusivamente aos outros. Há compreensão da humanidade em todas as fragilidades, que são observadas e compartilhadas com um público jovial, descontraído e contemplativo. O humor vem “do coração” e reflete uma atitude tolerante e amorosa para com os outros, que inclui a aceitação das suas deficiências. Uma pessoa com humor nesse sentido sabe que, tanto em grande como em pequena escala, o mundo não é perfeito. Ainda assim, com uma visão humorística do mundo, até mesmo as adversidades da vida podem ser divertidas e motivo de sorrisos. Quem utiliza esse estilo cômico consegue despertar compreensão e simpatia pelas imperfeições e pela condição humana por meio do humor.",
-            "nonsense": "O absurdo (nonsense), enquanto diversão intelectual, lúdica e alegre, visa expor o ridículo do puro sentido, embora basicamente sem qualquer propósito. Pessoas que gostam de bobagens se descrevem como brincalhonas e alegres. Eles deixam a mente brincar, por exemplo, sendo criativos com a linguagem e brincando com o sentido e o absurdo. Para eles, as incongruências não precisam ser resolvidas, mas o oposto é verdadeiro; isto é, quanto mais absurdo e mais engraçado. Eles criam um mundo de cabeça para baixo, usam a linguagem em suas imperfeições e acham divertidas histórias bizarras e fantásticas.",
-            "wit": "A sagacidade, em inglês \"wit\", pretende iluminar como uma lanterna, normalmente com uma piada surpreendente que usa combinações incomuns criadas na hora. Uma pessoa que usa a inteligência brinca com palavras e pensamentos, e pode ser insensível, maliciosa e geralmente sem simpatia pelas “vítimas”, a fim de maximizar o impacto engraçado. Produzir inteligência requer habilidades: envolve ler situações rapidamente e abordar assuntos não óbvios de uma forma engraçada. Eles surpreendem os outros com comentários engraçados e julgamentos precisos sobre questões atuais, que lhes ocorrem espontaneamente. Eles estabelecem relações entre ideias ou pensamentos desconexos e, assim, criam um efeito cômico de forma rápida e incisiva. Pessoas espirituosas podem ser tensas, vaidosas, levar-se a sério e procurar uma sociedade educada que aprecie declarações breves e diretas como um público ideal.",
-            "irony": "A ironia, em inglês \"irony\", conforme expressa nas interações, visa criar um sentimento mútuo de superioridade em relação aos outros, dizendo as coisas de maneira diferente do que elas querem dizer. Não implica mentir, pois pressupõe-se que as pessoas inteligentes compreenderão o que realmente se quis dizer, independentemente do que foi dito. Pessoas irônicas estão cortejando e deixando entrar os inteligentes, ao mesmo tempo em que zombam dos estúpidos. A ironia é um meio de confundir os não-insiders e descobrir quem é um insider bem informado. Outros podem vê-los como presunçosos, superiores e frequentemente críticos negativos.",
-            "satire": "A sátira (ou humor corretivo), em inglês \"satire\", compartilha com o sarcasmo e o cinismo a detecção de fraquezas e é agressivo. No entanto, isso está associado a tentativas de bondade. Isto envolve não apenas depreciar os maus e tolos, mas também a intenção de melhorar o mundo e corrigir os semelhantes. Um satírico toma o mundo ético como uma medida do mundo real e tenta melhorar as condições revelando as verdadeiras circunstâncias. O satírico é crítico, muitas vezes negativo, tenso e superior, mas prefere que o mundo seja moral e usa o ridículo para melhorá-lo. Embora a tendência agressiva seja o elemento comum, a zombaria não é feita com base no puro prazer, mas está alicerçada numa crítica de base moral. Pessoas com mentalidade crítica normalmente aprovam a sátira. A bondade da sátira apela à mudança de comportamentos ou mentalidades inadequadas sem prejudicar seriamente as relações interpessoais.",
-            "sarcasm": "O sarcasmo, em inglês \"sarcasm\", visa ferir os outros. A pessoa sarcástica é descrita, entre outros, como sendo hostil e zombeteira e como alguém que usa a exposição implacável para destacar o mundo corrupto. O público ideal consiste em pessoas subordinadas e dependentes. Pessoas com pontuação alta se considerariam malignas e críticas ao condenar a corrupção, a depravação, o vício ou o mal. Eles são propensos ao desprezo e à mágoa.",
-            "cynicism": "O cinismo, em inglês \"cynicism\", visa desvalorizar valores comumente reconhecidos. Os cínicos exibem uma atitude negativa e destrutiva. Eles usam a desilusão e a zombaria para destacar as fraquezas do mundo. Os cínicos não carecem de valores morais em geral, mas desprezam certas normas e conceitos morais comuns e os consideram ridículos."
-        }
-        return style_definitions.get(style, "Definição não encontrada.")
+    def get_text_explanation_prompt(self, humorous_text, text_origin, specific_contexts = ''):
+        text_explanation_prompt = f'''Explique o motivo do humor presente no seguinte texto, transcrito a partir de um {text_origin}. Aponte os elementos que contribuem para seu efeito cômico.
+        {f"Considere os seguintes contextos específicos relacionados ao texto humorístico: {specific_contexts}" if specific_contexts else ""}
+        Texto: {humorous_text}
+        Responda apenas com a explicação, sem detalhes adicionais.'''
+
+        return text_explanation_prompt
+
+    def get_styles_definitions(self):
+        styles_definitions = {
+            "diversão": "O estilo cômico da diversão é caracterizado pela intenção de propagar um estado de ânimo positivo e fortalecer os laços de camaradagem. Indivíduos que manifestam este estilo são tipicamente percebidos como sociáveis, joviais e agradáveis. No contexto interpessoal, podem empregar provocações leves e brincalhonas com aqueles que possuem maior familiaridade com esse tipo de interação. A autoimagem de pessoas com alta pontuação em diversão frequentemente inclui traços de serem joviais, gostarem de pregar peças inofensivas e de agir de maneira palhaça.",
+            "humor": "O humor benevolente centra-se na capacidade de suscitar simpatia e compreensão perante as incongruências inerentes à existência, as falhas do mundo e as imperfeições humanas, incluindo as próprias. Pessoas com este estilo demonstram ser observadoras perspicazes das fragilidades humanas, contudo, abordam-nas com benevolência e tolerância, muitas vezes incluindo-se em suas observações. Há uma compreensão profunda da condição humana, compartilhada de forma jovial e reflexiva. O humor, nesta acepção, reflete uma postura afetuosa e compreensiva para com os outros, aceitando suas limitações. A perspectiva de quem utiliza este estilo reconhece a imperfeição do mundo, mas permite encarar as adversidades com leveza e até mesmo divertimento.",
+            "absurdo": "O absurdo é definido como uma forma de diversão intelectual, lúdica e essencialmente alegre, cujo objetivo reside em expor o caráter ridículo da lógica estrita, embora desprovido de um propósito específico. Indivíduos que apreciam o nonsense descrevem-se como brincalhões e bem-humorados. Caracteriza-se por um jogo mental criativo, especialmente no domínio da linguagem, explorando a fronteira entre o sentido e o sem-sentido. Para estes indivíduos, a resolução de incongruências não é primordial; pelo contrário, quanto mais bizarra e ilógica a situação, maior o potencial de divertimento. Este estilo manifesta-se na criação de um universo invertido, na exploração das imperfeições da linguagem e na apreciação de narrativas fantásticas e incomuns.",
+            "engenhosidade": "A engenhosidade busca iluminar de maneira súbita e perspicaz, frequentemente através de uma reviravolta inesperada que combina ideias de forma original e imediata. A pessoa engenhosa demonstra habilidade no manejo de palavras e pensamentos, podendo, por vezes, apresentar-se insensível ou maliciosa para maximizar o efeito cômico, direcionando-se a um público que aprecie a agudeza e a brevidade. A produção de engenhosidade exige rapidez na leitura de situações e precisão em apontar aspectos não óbvios de maneira engraçada. Indivíduos com esse estilo surpreendem com comentários espirituosos e julgamentos pertinentes, estabelecendo conexões inesperadas entre conceitos. Personalidades com traços de engenhosidade podem ser percebidas como tensas e vaidosas, valorizando um interlocutor capaz de apreciar a sua sagacidade.",
+            "ironia": "A ironia, no contexto interacional, visa a construção de um sentimento compartilhado de superioridade em relação a terceiros, através da expressão de ideias de forma contrária ao seu significado literal. Diferentemente da mentira, a ironia pressupõe que o interlocutor inteligente será capaz de decifrar a intenção subjacente à mensagem. Indivíduos irônicos buscam a cumplicidade de mentes consideradas perspicazes, simultaneamente ridicularizando aqueles que não captam a sutileza da comunicação. A ironia serve como um mecanismo para distinguir os iniciados dos não iniciados. Observadores externos podem interpretar o uso frequente de ironia como arrogância, superioridade e uma tendência à crítica negativa.",
+            "sátira": "A sátira, também referida como humor corretivo, compartilha com o sarcasmo e o cinismo a identificação de falhas e uma vertente agressiva. Contudo, distingue-se pela intenção de promover a melhoria e a correção. O satirista busca depreciar o que é considerado inadequado ou insensato, com o objetivo de aperfeiçoar o mundo e os seus semelhantes, tomando um padrão ético como referência para avaliar a realidade. Embora o satirista possa ser crítico, negativo e tenso, a sua crítica fundamenta-se em princípios morais, visando aprimorar a conduta e as mentalidades sem prejudicar as relações interpessoais. A sátira apela a uma mentalidade crítica e é motivada por uma intenção de bondade.",
+            "sarcasmo": "O sarcasmo tem como propósito primordial infligir dano emocional ao outro. A pessoa sarcástica é caracterizada por traços de hostilidade e desprezo, utilizando a exposição impiedosa de imperfeições e falhas percebidas num mundo considerado corrupto. O público ideal para a manifestação do sarcasmo frequentemente consiste em indivíduos em posição de subordinação ou dependência. Quem pontua alto em sarcasmo tende a se ver como crítico e mordaz ao denunciar o que considera corrupção e maldade, demonstrando propensão ao escárnio e ao prazer pelo infortúnio.",
+            "cinismo": "O cinismo direciona-se à desvalorização de valores amplamente aceitos pela sociedade. Indivíduos cínicos exibem uma atitude pessimista e destrutiva, empregando o desencanto e a zombaria para evidenciar as fragilidades do mundo. Embora não se caracterizem pela ausência total de valores morais, os cínicos desprezam normas e conceitos morais convencionais, considerando-os absurdos."
+            }
+        return styles_definitions
+
+pm = PromptManager()
+#for prompt in pm.get_comic_styles_prompts('o cachorro caiu', 'stand-up', 'eu sou do BR'):
+#    print(prompt)
+
+print(pm.get_punchlines_prompt("humor humor humor", "podcast"))
