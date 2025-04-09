@@ -51,9 +51,3 @@ class PromptManager:
             "cinismo": "O cinismo direciona-se à desvalorização de valores amplamente aceitos pela sociedade. Indivíduos cínicos exibem uma atitude pessimista e destrutiva, empregando o desencanto e a zombaria para evidenciar as fragilidades do mundo. Embora não se caracterizem pela ausência total de valores morais, os cínicos desprezam normas e conceitos morais convencionais, considerando-os absurdos."
             }
         return styles_definitions
-
-pm = PromptManager()
-#for prompt in pm.get_comic_styles_prompts('o cachorro caiu', 'stand-up', 'eu sou do BR'):
-#    print(prompt)
-
-print(pm.get_punchlines_prompt("humor humor humor", "podcast"))
