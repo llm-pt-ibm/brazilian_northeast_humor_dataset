@@ -9,7 +9,7 @@ class DatasetLoader:
         "corrected_transcription",
         "text_origin",
         "punchlines",
-        "funny",
+        "fun",
         "humor",
         "nonsense",
         "wit",
