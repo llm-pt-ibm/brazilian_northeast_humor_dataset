@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 from database_creation.yt_data_extractor import *
 from whisper_audio_transcriber import *
@@ -17,7 +18,7 @@ class YouTubeVideoTranscriber:
 
         start_index = 0
         new_df = pd.DataFrame(columns = ['video_url', 'brazilian_state', 'video_title', 'video_length_seconds', 'publish_date', 'transcription', 'audio_path'])
-        new_csv_path = os.path.join(self.transcriptions_path, 'youtube_videos_transcribed.csv')
+        new_csv_path = os.path.join(self.transcriptions_path, 'youtube_videos_transcribed_with_metadata.csv')
         if os.path.exists(new_csv_path):
            new_df = pd.read_csv(new_csv_path)
            start_index = len(new_df)
