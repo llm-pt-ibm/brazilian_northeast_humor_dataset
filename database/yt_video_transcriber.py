@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from database_creation.yt_data_extractor import *
+from yt_data_extractor import *
 from whisper_audio_transcriber import *
 
 class YouTubeVideoTranscriber:
