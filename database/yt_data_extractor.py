@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 
 from pydub import AudioSegment
 from pytubefix import YouTube
