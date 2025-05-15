@@ -9,3 +9,5 @@ openai-whisper
 pytubefix
 pydub
 pandas
+geopandas
+matplotlib
