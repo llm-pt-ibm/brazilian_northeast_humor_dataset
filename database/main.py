@@ -19,22 +19,22 @@ def extract_transcripts_from_youtube_videos():
 
 def organize_final_dataset():
     annotated_df = pd.read_csv('data/annotated/data_with_new_annotation_from_peer_review_comments.csv')
-
     videos_df = pd.read_csv('data/transcriptions/youtube_videos_transcribed_with_metadata.csv')
     videos_df = videos_df[['video_url', 'video_title', 'publish_date']]
-
-    final_df = pd.merge(annotated_df, videos_df, on='video_url', how='left')
-    final_df = final_df[new_columns_order]
 
     new_columns_order = ['video_url', 'video_title', 'publish_date', 'brazilian_state', 'text_origin',
         'corrected_transcription', 'specific_contexts', 'punchlines',
        'fun', 'humor', 'nonsense', 'wit', 'irony', 'satire', 'sarcasm',
        'cynicism', 'joke_explanation']
+    final_df = pd.merge(annotated_df, videos_df, on='video_url', how='left')
     final_df = final_df[new_columns_order]
+
+    final_df = final_df.drop_duplicates()
+    final_df = final_df.apply(lambda x: x.str.strip() if x.dtype == "string" else x)
 
     os.makedirs('data/completed', exist_ok=True)
     final_df.to_csv('data/completed/brazilian_ne_annotated_humorous_texts.csv', index=False)
 
-extract_audios_from_youtube_videos()
-extract_transcripts_from_youtube_videos()
-#organize_final_dataset()
+#extract_audios_from_youtube_videos()
+#extract_transcripts_from_youtube_videos()
+organize_final_dataset()
