@@ -5,3 +5,4 @@
 *.png
 *.json
 *llms_evaluation/llm_eval_local/
+*venv/
