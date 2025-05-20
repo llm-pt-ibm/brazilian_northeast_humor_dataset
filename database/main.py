@@ -35,6 +35,11 @@ def organize_final_dataset():
     os.makedirs('data/completed', exist_ok=True)
     final_df.to_csv('data/completed/brazilian_ne_annotated_humorous_texts.csv', index=False)
 
-#extract_audios_from_youtube_videos()
-#extract_transcripts_from_youtube_videos()
+extract_audios_from_youtube_videos()
+extract_transcripts_from_youtube_videos()
+
+'''
+The function below should only be executed after the database annotations have been completed
+and saved in the folder "data/annotated" with the filename "data_with_new_annotation_from_peer_review_comments.csv".
+'''
 organize_final_dataset()
