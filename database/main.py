@@ -29,6 +29,10 @@ def organize_final_dataset():
     final_df = pd.merge(annotated_df, videos_df, on='video_url', how='left')
     final_df = final_df[new_columns_order]
 
+    binary_columns = ['fun', 'humor', 'nonsense', 'wit', 'irony', 'satire', 'sarcasm', 'cynicism']
+    for col in binary_columns:
+        final_df[col] = final_df[col].map({'Sim': 1, 'Não': 0}).astype('Int64')
+
     final_df = final_df.drop_duplicates()
     final_df = final_df.apply(lambda x: x.str.strip() if x.dtype == "string" else x)
 
