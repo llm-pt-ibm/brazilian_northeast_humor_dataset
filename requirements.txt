@@ -11,3 +11,4 @@ pydub
 pandas
 geopandas
 matplotlib
+seaborn
