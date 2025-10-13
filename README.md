@@ -8,5 +8,5 @@ Code used to collect transcriptions of texts by Northeastern comedians from YouT
 - ``pip install -r requirements.txt``
 - ``sudo apt-get update && apt-get install -y ffmpeg``
 
-  # Execution
+# Execution
 - ``python main.py``
