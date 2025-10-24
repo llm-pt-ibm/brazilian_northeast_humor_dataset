@@ -11,7 +11,7 @@ Code used to collect and polish transcriptions of texts by Northeastern comedian
 
 # Data Exploration
 
-The exploration of some data distributions and the verification of the number of changes after manual annotations and revisions are available in the ````data_exploration.ipynb``` notebook.
+The exploration of some data distributions and the verification of the number of changes after manual annotations and revisions are available in the ```data_exploration.ipynb``` notebook.
 
 # Requirements
 
