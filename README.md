@@ -1,6 +1,6 @@
 # Brazilian Northeast Humor Dataset
 
-Code used to collect transcriptions of texts by Northeastern comedians from YouTube Shorts.
+Code used to collect and polish transcriptions of texts by Northeastern comedians from YouTube Shorts.
 
 # Data
 
@@ -8,6 +8,10 @@ Code used to collect transcriptions of texts by Northeastern comedians from YouT
 2. The data in the ```/data/transcriptions``` folder come from the automatic collection performed by the code in this repository.
 3. The data in the ```/data/annotated``` folder come from the <b>manual</b> annotations and revisions described in this [Zenodo repository](https://zenodo.org/records/15473224).
 4. The data in the ```/data/completed``` folder come from the automatic polishing process performed by the code in this repository.
+
+# Data Exploration
+
+The exploration of some data distributions and the verification of the number of changes after manual annotations and revisions are available in the ````data_exploration.ipynb``` notebook.
 
 # Requirements
 
